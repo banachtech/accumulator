@@ -6,8 +6,8 @@ Disclaimer:
 This work in progress and is not meant to provide a tradable price.
 
 ## Usage
-```julia
-julia accumulator.jl -h
+```bash
+$ julia accumulator.jl -h
 usage: accumulator.jl [-n SHARES] [-l LEVERAGE] [-f FREQ] [-p PERIODS]
                       [-o OFFSET] [-g GTE] [-s SPOTREF] [-k STRIKE]
                       [-b BARRIER] [-r RF] [-q DIV] [-σ SIGMA]
@@ -41,6 +41,13 @@ optional arguments:
                         10000)
   -h, --help            show this help message and exit
   ```
+
+For example, to price a 6 month, weekly settled, 2x leveraged accumulator with strike 90% and ko 105% with default market data and model parameters, use
+
+```bash
+$ julia accumulator.jl --strike 0.9 --barrier 1.05 --freq "1w" --periods 26
+-0.04303109340515951
+```
 
 ## References
 [^1]: Lam, K., Philip, L. H., & Xin, L. (2009, March). [Accumulator pricing](https://hub.hku.hk/bitstream/10722/132834/2/Content.pdf). In 2009 IEEE Symposium on Computational Intelligence for Financial Engineering (pp. 72-79). IEEE. 
