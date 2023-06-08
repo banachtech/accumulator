@@ -3,7 +3,7 @@
 An monte-carlo pricer in Julia to price leveraged accumulator structured product[^1]. Stock price model is Hyperbolic local volatility model of Jäckel[^2].
 
 Disclaimer: 
-This work in progress and is not meant to provide a tradable price.
+This is work in progress and is not meant to provide a tradable price.
 
 ## Usage
 ```bash
