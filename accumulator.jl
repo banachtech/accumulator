@@ -21,7 +21,7 @@ function main()
             div=args["div"]
             )
     accu_price = price(accu,mkt_data,args["iters"])
-    println(accu_price)
+    println("fair value (%): ", accu_price*100)
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
