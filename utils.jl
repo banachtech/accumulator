@@ -123,12 +123,21 @@ end
 
 function price(args,mkt_data,numsamples)
     periods, valuation_dates = generate_dates(args)
-    notional = sum([length(q.obs_dates) for q in periods]) * args.strike_price * args.num_shares
+    num_dates = sum([length(q.obs_dates) for q in periods])
+    println()
+    println("number of valuation dates: ", num_dates)
+    println("start    end    settle    days")
+    for o in periods
+        println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
+    end
+    println()
+    notional = num_dates * args.strike_price * args.num_shares
     px = zeros(numsamples)
     Threads.@threads for i in 1:numsamples
         p = generate_path(valuation_dates, mkt_data)
         px[i] = payout(p,periods,mkt_data,args)
     end
     pct_px = sum(px)/numsamples/notional
+    println("notional: ", notional)
     return pct_px
 end
