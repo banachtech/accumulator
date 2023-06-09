@@ -133,7 +133,7 @@ function price(args,mkt_data,numsamples)
     notional = num_dates * args.strike_price * args.num_shares
     px = zeros(numsamples)
     Threads.@threads for i in 1:numsamples
-        p = generate_path_bs(valuation_dates, mkt_data)
+        p = generate_path(valuation_dates, mkt_data)
         px[i] = payout(p,periods,mkt_data,args)
     end
     pct_px = sum(px)/numsamples/notional
