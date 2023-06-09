@@ -45,8 +45,25 @@ optional arguments:
 For example, to price a 6 month, weekly settled, 2x leveraged accumulator with strike 90% and ko 105% with default market data and model parameters, use
 
 ```bash
-$ julia accumulator.jl --strike 0.9 --barrier 1.05 --freq "1w" --periods 26
--0.04303109340515951
+$ julia accumulator.jl -f "1m" -p 12 -o 0 -g 0 -r 0.03 --sigma 0.2 -q 0.0 -i 100000 -i 100000
+
+number of valuation dates: 259
+start        end        settle      days
+2023-06-12  2023-07-11  2023-07-11  20
+2023-07-12  2023-08-11  2023-08-11  23
+2023-08-14  2023-09-13  2023-09-13  22
+2023-09-14  2023-10-13  2023-10-13  22
+2023-10-16  2023-11-15  2023-11-15  23
+2023-11-16  2023-12-15  2023-12-15  21
+2023-12-18  2024-01-17  2024-01-17  20
+2024-01-18  2024-02-16  2024-02-16  22
+2024-02-20  2024-03-19  2024-03-19  21
+2024-03-20  2024-04-19  2024-04-19  22
+2024-04-22  2024-05-21  2024-05-21  22
+2024-05-22  2024-06-21  2024-06-21  21
+
+notional: 233.1
+fair value (%): -0.8230122185772926
 ```
 
 ## References

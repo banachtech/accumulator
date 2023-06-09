@@ -22,6 +22,7 @@ function main()
             )
     accu_price = price(accu,mkt_data,args["iters"])
     println("fair value (%): ", accu_price*100)
+    println()
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

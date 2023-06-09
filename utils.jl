@@ -126,7 +126,7 @@ function price(args,mkt_data,numsamples)
     num_dates = sum([length(q.obs_dates) for q in periods])
     println()
     println("number of valuation dates: ", num_dates)
-    println("start    end    settle    days")
+    println("start        end        settle      days")
     for o in periods
         println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
     end
