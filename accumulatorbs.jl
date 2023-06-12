@@ -53,8 +53,8 @@ function valueAccumulator()
     for i in 1:length(t)
         H = args.ko_price * exp(beta * mkt.σ * sqrt((Dates.value(periods[i] - args.trade_date))/365/i))
         value = value + 
-        (S*exp(-mkt.div*T[i]))* ((2- N(x(t[i])) - N(x1(t[i])) - (H/S)^(2*lambda) * N(-y(t[i])) -(H/S)^(2*lambda) * N(-y1(t[i])))) - 
-        (K*exp(-mkt.rf*T[i]))*  ((2 - N(x(t[i])-mkt.σ*sqrt(t[i])) - N(x1(t[i])-mkt.σ*sqrt(t[i]))) - (H/S)^(2*lambda-2)*N(-y(t[i])+mkt.σ*sqrt(t[i])) - (H/S)^(2*lambda-2)*N(-y1(t[i])+mkt.σ*sqrt(t[i])))
+        (S*exp(-mkt.div*T[i]))* ((2 - N(x(t[i])) -                  N(x1(t[i])) -                   (H/S)^(2*lambda)    * N(-y(t[i]))                   - (H/S)^(2*lambda) *    N(-y1(t[i])))) - 
+        (K*exp(-mkt.rf*T[i]))*  ((2 - N(x(t[i])-mkt.σ*sqrt(t[i]))-  N(x1(t[i])-mkt.σ*sqrt(t[i]))) - (H/S)^(2*lambda-2)  * N(-y(t[i])+mkt.σ*sqrt(t[i]))  - (H/S)^(2*lambda-2) *  N(-y1(t[i])+mkt.σ*sqrt(t[i])))
     end
     return value
 end
