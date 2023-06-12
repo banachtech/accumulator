@@ -12,7 +12,7 @@ Base.@kwdef mutable struct ArgsBlackScholes
     settlement_offset = 2
     gte_periods = 1
     spot_price = 100
-    strike_price = 90
+    strike_price = 090
     ko_price = 105
 end
 
@@ -42,6 +42,8 @@ function valueAccumulator()
             push!(T, Dates.value(dates[i].settle_date - args.trade_date)/365)
         end
     end
+
+    num_dates = sum([length(q.obs_dates) for q in dates])
     μ = mkt.rf - mkt.div - 0.5 * mkt.σ^2
     λ = 1 + μ / (mkt.σ^2)
 
@@ -58,7 +60,9 @@ function valueAccumulator()
         (S * exp(-mkt.div * T[i])) * ((2 - N(x(t[i])) -                  N(x1(t[i])) -                   (H/S)^(2*λ)    * N(-y(t[i]))                   - (H/S)^(2*λ) *    N(-y1(t[i])))) - 
         (K * exp(-mkt.rf * T[i])) *  ((2 - N(x(t[i])-mkt.σ*sqrt(t[i]))-  N(x1(t[i])-mkt.σ*sqrt(t[i]))) - (H/S)^(2*λ-2)  * N(-y(t[i])+mkt.σ*sqrt(t[i]))  - (H/S)^(2*λ-2) *  N(-y1(t[i])+mkt.σ*sqrt(t[i])))
     end
-    return value
+
+    notional = num_dates * args.strike_price * args.num_shares
+    return value / notional * 100
 end
 
 println(valueAccumulator())
