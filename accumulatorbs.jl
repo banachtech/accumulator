@@ -43,10 +43,10 @@ function valueAccumulator()
     mu = mkt.rf - mkt.div - mkt.σ^2/2
     lambda = 1 + mu / mkt.σ^2
 
-    x(t) = (log10(S/K)+ (mu +  mkt.σ^2)*t)/ mkt.σ * sqrt(t)
-    x1(t) = (log10(S/H)+ (mu +  mkt.σ^2)*t)/ mkt.σ * sqrt(t)
-    y(t) = (log10(H^2/S/K) + (mu+ mkt.σ^2)*t)/ mkt.σ * sqrt(t)
-    y1(t) = (log10(H/S) + (mu+ mkt.σ^2)*t)/ mkt.σ * sqrt(t)
+    x(t) = (log(S/K)+ (mu +  mkt.σ^2)*t)/ mkt.σ * sqrt(t)
+    x1(t) = (log(S/H)+ (mu +  mkt.σ^2)*t)/ mkt.σ * sqrt(t)
+    y(t) = (log(H^2/S/K) + (mu+ mkt.σ^2)*t)/ mkt.σ * sqrt(t)
+    y1(t) = (log(H/S) + (mu+ mkt.σ^2)*t)/ mkt.σ * sqrt(t)
 
     N(x) = cdf(Normal(), x)
     value = 0

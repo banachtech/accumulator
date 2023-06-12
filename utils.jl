@@ -1,3 +1,5 @@
+module AccumulatorPricer
+using BusinessDays, Random, Dates, Distributions
 
 Base.@kwdef mutable struct Args
     trade_cal = :USNYSE
@@ -140,4 +142,5 @@ function price(args,mkt_data,numsamples)
     println()
     println("notional: ", notional)
     return pct_px
+end
 end
