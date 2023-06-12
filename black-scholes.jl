@@ -59,43 +59,6 @@ function y1(t)# Checked TO be correct
     return (log(H/S)+(mu+sigma_squared)*t)/(σ*sqrt(t))
 end
 
-# function black_scholes_up_out_put(S, K, T, r, σ, H, t, q)
-
-#     Nd1 = cdf(Normal(), -x(t) + σ*sqrt(t))
-#     Nd2 = cdf(Normal(), -y(t) + σ*sqrt(t))
-#     Nd3 = cdf(Normal(), -x(t))
-#     Nd4 = cdf(Normal(), -y(t))
-
-#     return  (exp(-r*T)*K) * (Nd1 - (H/S)^(2*lambda-2)*(Nd2)) - (S*exp(-q*T)) * (Nd3 - ((H/S)^(2*lambda))*(Nd4))
-# end
-
-
-# function black_scholes_up_out_call(S, K, T, r, σ, H, t, q)
-#     Nd1 = cdf(Normal(), x(t))
-#     Nd2 = cdf(Normal(), x1(t))
-#     Nd3 = cdf(Normal(), -y(t))
-#     Nd4 = cdf(Normal(), -y1(t))
-#     Nd5 = cdf(Normal(), x(t) - σ*sqrt(t))
-#     Nd6 = cdf(Normal(), x1(t) - σ*sqrt(t))
-#     Nd7 = cdf(Normal(), -y(t) + σ*sqrt(t))
-#     Nd8 = cdf(Normal(), -y1(t) + σ*sqrt(t))
-    
-#     println("The parameters are:")
-#     println("Strike\t", K)
-#     println("Knock out barrier\t", H)
-#     println("Spot Price", S)
-#     println("Settlement dates\n", T)
-#     println("Observation dates\n",t)
-#     println("Dividend payout\n",q)
-#     println("Risk Free Rate\n",r)
-#     println("Purchase Ratio\t",g)
-#     println("Volatility\t", σ)
-
-#     return (S*exp(-q*T)) * (Nd1-Nd2 + ((H/S)^(2*lambda))*(Nd3-Nd4)) - (exp(-r*T)*K) * (Nd5 - Nd6 + (H/S)^(2*lambda-2)*(Nd7-Nd8))
-# end
-
-
-
 function value_accumulator2()
     value = 0
     args = ArgsBS()
