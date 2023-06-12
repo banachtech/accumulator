@@ -10,7 +10,7 @@ Base.@kwdef mutable struct ArgsBlackScholes
     settlement_frequency = "1m"
     num_settlements = 12
     settlement_offset = 2
-    gte_periods = 1
+    gte_periods = 21
     spot_price = 100
     strike_price = 090
     ko_price = 105
@@ -55,7 +55,11 @@ function valueAccumulator()
     N(x) = cdf(Normal(), x)
     value = 0
     for i in eachindex(t)
-        H = args.ko_price * exp(beta * mkt.σ * sqrt(T[i] / m[i]))
+        if(i<args.gte_periods)
+            H = args.spot_price*10
+        else
+            H = args.ko_price * exp(beta * mkt.σ * sqrt(T[i] / m[i]))
+        end
         value = value + 
         (S * exp(-mkt.div * T[i])) * ((2 - N(x(t[i])) -                  N(x1(t[i])) -                   (H/S)^(2*λ)    * N(-y(t[i]))                   - (H/S)^(2*λ) *    N(-y1(t[i])))) - 
         (K * exp(-mkt.rf * T[i])) *  ((2 - N(x(t[i])-mkt.σ*sqrt(t[i]))-  N(x1(t[i])-mkt.σ*sqrt(t[i]))) - (H/S)^(2*λ-2)  * N(-y(t[i])+mkt.σ*sqrt(t[i]))  - (H/S)^(2*λ-2) *  N(-y1(t[i])+mkt.σ*sqrt(t[i])))
