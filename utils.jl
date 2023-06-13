@@ -1,5 +1,3 @@
-module AccumulatorPricer
-using BusinessDays, Random, Dates, Distributions
 
 Base.@kwdef mutable struct Args
     trade_cal = :USNYSE
@@ -10,16 +8,16 @@ Base.@kwdef mutable struct Args
     settlement_frequency = "1w"
     num_settlements = 12
     settlement_offset = 2
-    gte_periods = 1
+    gte_periods = 0
     spot_price = 1.0
-    strike_price = 0.8
-    ko_price = 1.0
+    strike_price = 0.9
+    ko_price = 1.05
 end
 
 Base.@kwdef mutable struct MktData
     rf = 0.03
-    σ = 0.26
-    β = 1.0
+    σ = 0.43
+    β = 0.01
     div = 0.0
 end
 
@@ -99,21 +97,23 @@ end
 function payout(path,periods,mkt_data,args)
     pv = 0.0
     n = 0
+
     for x in periods
         isko = false
         settle_price = path[x.settle_date]
         vals = [path[t] for t in x.obs_dates]
         
         for v in vals
-            if !isko || x.is_gte 
-                n += v > args.strike_price ? args.num_shares : args.boosted_num_shares
+            if !isko || x.is_gte
+                n += v >= args.strike_price ? args.num_shares : args.boosted_num_shares
             end
-            if v > args.ko_price
+            if v >= args.ko_price
                 isko = true
             end
         end
         dt = Dates.value(x.settle_date - args.trade_date)/365
         disc_factor = (1.0 + mkt_data.rf)^(-dt)
+
         pv += n * (settle_price - args.strike_price) * disc_factor
         n = 0
         if isko && !x.is_gte
@@ -138,9 +138,8 @@ function price(args,mkt_data,numsamples)
         p = generate_path(valuation_dates, mkt_data)
         px[i] = payout(p,periods,mkt_data,args)
     end
-    pct_px = sum(px)/numsamples/notional
+    pct_px = sum(px)/(numsamples*notional)
     println()
     println("notional: ", notional)
     return pct_px
-end
 end

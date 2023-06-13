@@ -10,10 +10,10 @@ Base.@kwdef mutable struct ArgsBlackScholes
     settlement_frequency = "1m"
     num_settlements = 12
     settlement_offset = 2
-    gte_periods = 21
-    spot_price = 100
-    strike_price = 090
-    ko_price = 105
+    gte_periods = 0
+    spot_price = 1.00
+    strike_price = .90
+    ko_price = 1.05
 end
 
 
@@ -27,7 +27,16 @@ end
 function valueAccumulator()
     args = ArgsBlackScholes()
     mkt = MktDataBlackScholes()
-    dates, periods = AccumulatorPricer.generate_dates(args)
+    dates, periods = generate_dates(args)
+
+    num_dates = sum([length(q.obs_dates) for q in dates])
+    println()
+    println("number of valuation dates: ", num_dates)
+    println("start        end        settle      days")
+    for o in dates
+        println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
+    end
+
     H = args.ko_price
     K = args.strike_price
     S = args.spot_price
@@ -66,7 +75,9 @@ function valueAccumulator()
     end
 
     notional = num_dates * args.strike_price * args.num_shares
+    println()
+    println("notional: ", notional)
     return value / notional * 100
 end
 
-println(valueAccumulator())
+println("fair value (%): ", valueAccumulator())
