@@ -15,7 +15,7 @@ Base.@kwdef mutable struct Args
 end
 
 Base.@kwdef mutable struct MktData
-    rf = 0.03
+    rf = 0.0409
     σ = 0.43
     β = 0.01
     div = 0.0
@@ -94,7 +94,7 @@ function generate_path(valuation_dates,mkt_data)
     return p
 end
 
-function payout(path,periods,mkt_data,args)
+function accumulator_payout(path,periods,mkt_data,args)
     pv = 0.0
     n = 0
 
@@ -123,7 +123,36 @@ function payout(path,periods,mkt_data,args)
     return pv
 end
 
-function price(args,mkt_data,numsamples)
+function accumulator_payout(path,periods,mkt_data,args)
+    pv = 0.0
+    n = 0
+
+    for x in periods
+        isko = false
+        settle_price = path[x.settle_date]
+        vals = [path[t] for t in x.obs_dates]
+        
+        for v in vals
+            if !isko || x.is_gte
+                n += v >= args.strike_price ? args.num_shares : args.boosted_num_shares
+            end
+            if v >= args.ko_price
+                isko = true
+            end
+        end
+        dt = Dates.value(x.settle_date - args.trade_date)/365
+        disc_factor = (1.0 + mkt_data.rf)^(-dt)
+
+        pv += n * (settle_price - args.strike_price) * disc_factor
+        n = 0
+        if isko && !x.is_gte
+            break
+        end
+    end
+    return pv
+end
+
+function accumulator_price(args,mkt_data,numsamples)
     periods, valuation_dates = generate_dates(args)
     num_dates = sum([length(q.obs_dates) for q in periods])
     println()
@@ -136,7 +165,57 @@ function price(args,mkt_data,numsamples)
     px = zeros(numsamples)
     Threads.@threads for i in 1:numsamples
         p = generate_path(valuation_dates, mkt_data)
-        px[i] = payout(p,periods,mkt_data,args)
+        px[i] = accumulator_payout(p,periods,mkt_data,args)
+    end
+    pct_px = sum(px)/(numsamples*notional)
+    println()
+    println("notional: ", notional)
+    return pct_px
+end
+
+function decumulator_payout(path,periods,mkt_data,args)
+    pv = 0.0
+    n = 0
+
+    for x in periods
+        isko = false
+        settle_price = path[x.settle_date]
+        vals = [path[t] for t in x.obs_dates]
+        
+        for v in vals
+            if !isko || x.is_gte
+                n += v <= args.strike_price ? args.num_shares : args.boosted_num_shares
+            end
+            if v <= args.ko_price
+                isko = true
+            end
+        end
+        dt = Dates.value(x.settle_date - args.trade_date)/365
+        disc_factor = (1.0 + mkt_data.rf)^(-dt)
+
+        pv += n * (args.strike_price - settle_price) * disc_factor
+        n = 0
+        if isko && !x.is_gte
+            break
+        end
+    end
+    return pv
+end
+
+function decumulator_price(args,mkt_data,numsamples)
+    periods, valuation_dates = generate_dates(args)
+    num_dates = sum([length(q.obs_dates) for q in periods])
+    println()
+    println("number of valuation dates: ", num_dates)
+    println("start        end        settle      days")
+    for o in periods
+        println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
+    end
+    notional = num_dates * args.strike_price * args.num_shares
+    px = zeros(numsamples)
+    Threads.@threads for i in 1:numsamples
+        p = generate_path(valuation_dates, mkt_data)
+        px[i] = decumulator_payout(p,periods,mkt_data,args)
     end
     pct_px = sum(px)/(numsamples*notional)
     println()

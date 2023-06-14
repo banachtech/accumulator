@@ -34,15 +34,15 @@ function parse_cli()
         "--strike", "-k"
             help = "strike price"
             arg_type = Float64
-            default = 0.9
+            default = 1.05
         "--barrier", "-b"
             help = "ko barrier price"
             arg_type = Float64
-            default = 1.05
+            default = 0.95
         "--rf", "-r"
             help = "risk-free rate"
             arg_type = Float64
-            default = 0.0
+            default = 0.0409
         "--div", "-q"
             help = "dividend yield"
             arg_type = Float64
@@ -50,11 +50,11 @@ function parse_cli()
         "--sigma", "-σ"
             help = "hyp local sigma"
             arg_type = Float64
-            default = 0.4
+            default = 0.730934623
         "--beta", "-β"
             help = "hyp local beta"
             arg_type = Float64
-            default = 0.10
+            default = 0.603063223
         "--iters", "-i"
             help = "number of mc iterations"
             arg_type = Int
