@@ -15,9 +15,9 @@ Base.@kwdef mutable struct Args
 end
 
 Base.@kwdef mutable struct MktData
-    rf = 0.0409
-    σ = 0.43
-    β = 0.01
+    rf = 0.0
+    σ = 0.20
+    β = 0.00
     div = 0.0
 end
 
@@ -155,12 +155,12 @@ end
 function accumulator_price(args,mkt_data,numsamples)
     periods, valuation_dates = generate_dates(args)
     num_dates = sum([length(q.obs_dates) for q in periods])
-    println()
-    println("number of valuation dates: ", num_dates)
-    println("start        end        settle      days")
-    for o in periods
-        println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
-    end
+    # println()
+    # println("number of valuation dates: ", num_dates)
+    # println("start        end        settle      days")
+    # for o in periods
+    #     println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
+    # end
     notional = num_dates * args.strike_price * args.num_shares
     px = zeros(numsamples)
     Threads.@threads for i in 1:numsamples
@@ -205,12 +205,12 @@ end
 function decumulator_price(args,mkt_data,numsamples)
     periods, valuation_dates = generate_dates(args)
     num_dates = sum([length(q.obs_dates) for q in periods])
-    println()
-    println("number of valuation dates: ", num_dates)
-    println("start        end        settle      days")
-    for o in periods
-        println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
-    end
+    # println()
+    # println("number of valuation dates: ", num_dates)
+    # println("start        end        settle      days")
+    # for o in periods
+    #     println(o.obs_dates[1],"  ", o.obs_dates[end],"  ", o.settle_date, "  ", length(o.obs_dates))
+    # end
     notional = num_dates * args.strike_price * args.num_shares
     px = zeros(numsamples)
     Threads.@threads for i in 1:numsamples

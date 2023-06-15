@@ -20,7 +20,7 @@ function main()
             β=args["beta"],    
             div=args["div"]
             )
-    accu_price = price(accu,mkt_data,args["iters"])
+    accu_price = accumulator_price(accu,mkt_data,args["iters"])
     println("fair value (%): ", accu_price*100)
     println()
 end
